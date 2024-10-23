@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
+import sqlite3 
 
 
 class Cnn:
@@ -34,13 +35,29 @@ class Cnn:
 
             return news_data
         return []
+    def save_in_db(self, news_data):
+        conn = sqlite3.connect('cnnbrasil.db')
+        cursor = conn.cursor()
 
+        cursor.execute('''
+            CREATE TABLE IF NOT EXISTS noticias (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                title TEXT,
+                link TEXT
+            )
+        ''')
 
-ext = Cnn('https://www.cnnbrasil.com.br/internacional/')
-news_data = ext.get_news_titles_and_links()
+        for news in news_data:
+            cursor.execute('''
+                INSERT INTO noticias (title, link)
+                VALUES (?, ?)
+            ''', (news['title'], news['link']))
 
-# Imprime os títulos das notícias e os links encontrados
-for news in news_data:
-    print(f"Title: {news['title']}")
-    print(f"Link: {news['link']}")
-    print("-" * 40)
+        conn.commit()
+        conn.close()
+
+if __name__ == '__main__':
+    link = 'https://www.cnnbrasil.com.br/'
+    cnn = Cnn(link)
+    news_data = cnn.get_news_titles_and_links()
+    cnn.save_in_db(news_data)
