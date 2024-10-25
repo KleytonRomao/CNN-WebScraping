@@ -17,7 +17,8 @@ class Cnn:
 
     def get_news_titles_and_links(self):
         soup = self.request()
-        if soup:
+         
+        if soup is not None:
             news_data = []
             titles = soup.find_all('h3', class_='news-item-header__title')
 
@@ -38,6 +39,7 @@ class Cnn:
     def save_in_db(self, news_data):
         conn = sqlite3.connect('cnnbrasil.db')
         cursor = conn.cursor()
+        cursor.execute('DROP TABLE IF EXISTS noticias')
 
         cursor.execute('''
             CREATE TABLE IF NOT EXISTS noticias (
@@ -57,7 +59,7 @@ class Cnn:
         conn.close()
 
 if __name__ == '__main__':
-    link = 'https://www.cnnbrasil.com.br/'
+    link = 'https://www.cnnbrasil.com.br/internacional/'
     cnn = Cnn(link)
     news_data = cnn.get_news_titles_and_links()
     cnn.save_in_db(news_data)
