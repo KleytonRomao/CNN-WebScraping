@@ -1,5 +1,6 @@
-from utils.scraping import Scraping
+from utils.scraper import *
 
 if __name__ == "__main__":
-    scraper = Scraping()
-    scraper.parse()
+    url = "https://www.cnnbrasil.com.br/internacional/"
+    data = scrape_website(url)
+    print(data)
