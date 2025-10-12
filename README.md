@@ -9,3 +9,4 @@ Execute os seguintes comandos para instalar as dependências:
 ```bash
 pip install requests
 pip install beautifulsoup4
+pip install peewee

@@ -8,4 +8,4 @@ if __name__ == "__main__":
         for article in articles:
             result = (article.get_text(strip=True))
             result = noticias.create(conteudo=result)
-        
+            
